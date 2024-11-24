@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale= 8">
+  <title>Admin-Only Overlay Removal</title>
+  <style>
+    body {
+      margin: 10;
+      font-family: Arial, sans-serif;
+    }
+<br>
+<br>
+    .content {
+      position: 30vh;
+      z-index: 1;
+      padding: 30;
+color: #0056b3;
+    }
+
+    .overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.1);
+      z-index: 9999; /* Blocks everything below */
+      pointer-events: all; /* Ensures the overlay blocks interactions */
+      cursor: not-allowed;
+    }
+
+    .remove-btn {
+      position: fixed; /* Fixed positioning ensures it stays above */
+      top: 20px;
+      right: 20px;
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: #0056b3;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      z-index: 10000; /* Higher than the overlay */
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+<h1>
+<h2>
+<h3>
+<br> <br><br>
+<br>DATE---21 NOV 2024
+    </h1>
+    <p> lock</p>
+  </div>
+  
+  <div class="overlay"></div>
+  
+  <!-- Place the button above the overlay -->
+  <button class="remove-btn" onclick="authenticate()">Remove Overlay</button>
+
+  <script>
+    function authenticate() {
+      // Ask the admin for a password
+      const password = prompt("Enter admin password to remove the overlay:");
+      const adminPassword = "adminggg"; // Set your admin password here
+
+      if (password === adminPassword) {
+        const overlay = document.querySelector('.overlay');
+        if (overlay) {
+          overlay.remove(); // Removes the overlay
+          alert("Overlay removed successfully!");
+        } else {
+          alert("Overlay is already removed.");
+        }
+      } else {
+        alert("Incorrect password. You are not authorized to remove the overlay.");
+      }
+    }
+  </script>
+</body>
+</html>
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Lucky Draw Countdown</title>
+  <style>
+    /* Styling */
+    body {
+      display: flex;
+      flex-direction: column;
+      justify-content: down;
+      align-items: center;
+      height: 60vh;
+      margin: 0;
+      background: url('333.jpeg') no-repeat center center fixed;
+      background-size: cover;
+      font-family: Arial, sans-serif;
+      color: black;
+      text-shadow: 1px 1px 2px black;
+    }
+
+    .controls, .digit-container, .countdown, .text-box {
+      margin: 15px;
+    }
+
+    .digit-container {
+      width: 100px;
+      height: 350px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: rgba(255, 255, 255, 0.8);
+      border: 3px solid #ccc;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .digit {
+      font-size: 50px;
+      font-weight: bold;
+      color: #333;
+    }
+
+    .controls {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background-color: rgba(0, 0, 0, 0.5);
+      padding: 20px;
+      border-radius: 10px;
+    }
+
+    .controls input, .controls textarea,
+    .controls button {
+      margin: 5px;
+      padding: 10px;
+      font-size: 16px;
+      border-radius: 5px;}
+
+    .controls button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;}
+
+    .controls button:hover {
+      background-color: #0056b3;
+    }
+
+    .countdown {
+      font-size: 40px;
+      font-weight: bold;
+      color: #ff3333;
+      text-align: center;
+    }
+
+    .text-box {
+      width: 300px;
+      height: 1000px;
+      padding: 10px;
+      font-size: 16px;
+      border: 10px solid #ccc;
+      border-radius: 20px;
+      resize: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Editable Controls -->
+  <div class="controls">
+
+    <label>
+      <b>Set Duration (H:M:S):</b>
+      <input type="text" id="duration" placeholder="e.g., 0:1:0 (1 minute)" value="0:01:00">
+    </label>
+    <label>
+      <b>Enter Numbers to Scroll (Comma-Separated):</b>
+      <textarea id="numberList">0,1,2,3,4,5,6,7,8,9</textarea>
+    </label>
+    <label>
+      <b>Set Scrolling Speed (ms):</b>
+      <input type="number" id="speed" value="100" min="10">
+    </label>
+    <button id="startButton">Start Scrolling</button>
+  </div>
+
+  <!-- Digit Container -->
+  <div class="digit-container">
+    <div class="digit" id="digit">0</div>
+  </div>
+
+  <!-- Countdown Timer -->
+  <div class="countdown" id="countdownTimer">0:00:00</div>
+
+  <!-- Text Box -->
+  <textarea class="text-box" id="customTextBox" placeholder="Write anything here..."></textarea>
+
+  <script>
+ let intervalId = null;
+    let countdownInterval = null;
+
+    // Function to convert H:M:S to milliseconds
+    function convertToMilliseconds(duration) {
+      const [hours, minutes, seconds] = duration.split(":").map(Number);
+      return (hours * 3600 + minutes * 60 + seconds) * 1000;
+    }
+
+    // Function to format milliseconds into H:M:S
+    function formatMilliseconds(ms) {
+      const totalSeconds = Math.floor(ms / 1000);
+      const hours = Math.floor(totalSeconds / 3600);
+      const minutes = Math.floor((totalSeconds % 3600) / 60);
+      const seconds = totalSeconds % 60;
+
+      return `${hours}:${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    // Function to start scrolling
+    function startScrolling(containerId, speed, numbers, duration) {
+      const container = document.getElementById(containerId);
+      let index = 0;
+
+      // Update the digit at the specified speed
+      intervalId = setInterval(() => {
+        index = (index + 1) % numbers.length;
+        container.textContent = numbers[index];
+      }, speed);
+
+      // Stop scrolling after the specified duration
+      setTimeout(() => {
+        clearInterval(intervalId);
+        clearInterval(countdownInterval);
+      }, duration);
+    }
+
+    // Function to start the countdown timer
+    function startCountdown(duration) {
+      const countdownTimer = document.getElementById("countdownTimer");
+      let remainingTime = duration;
+
+      // Update the timer every second
+      countdownInterval = setInterval(() => {
+        remainingTime -= 1000;
+        countdownTimer.textContent = formatMilliseconds(remainingTime);
+
+        // Stop countdown at 0
+        if (remainingTime <= 0) {
+          clearInterval(countdownInterval);
+          countdownTimer.textContent = "0:00:00";
+        }
+      }, 1000);
+    }
+
+    // Handle Start Button Click
+    document.getElementById("startButton").addEventListener("click", () => {
+      // Stop any existing scrolling or countdown
+      if (intervalId) clearInterval(intervalId);
+      if (countdownInterval) clearInterval(countdownInterval);
+
+      // Get user inputs
+      const durationInput = document.getElementById("duration").value;
+      const duration = convertToMilliseconds(durationInput); // Convert to milliseconds
+      const speed = parseInt(document.getElementById("speed").value);
+      const numbers = document.getElementById("numberList").value.split(",").map(Number);
+
+      // Validate duration
+      if (isNaN(duration) || duration <= 0) {
+        alert("Please enter a valid duration in H:M:S format.");
+        return;
+      }
+
+      // Start scrolling and countdown
+      startScrolling("digit", speed, numbers, duration);
+      startCountdown(duration);
+    });
+  </script>
+</body>
+</html>
